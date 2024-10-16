@@ -202,8 +202,7 @@ export const Qna = (props) => {
                 isPreview,
                 skipScore:qna.notUsedForScore,
                 result: qna.notUsedForScore ? null : qna.answers
-                    .filter(answer => answer.isAnswer)
-                    .reduce( (test,answer) => test && answer.checked,true)
+                    .reduce( (test,answer) => test && (answer.isAnswer ? answer.checked : !answer.checked),true)
             }
         }
 

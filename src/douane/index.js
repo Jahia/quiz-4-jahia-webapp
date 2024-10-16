@@ -1,18 +1,18 @@
 import * as Ajv from "ajv";
 import AjvFormats from "ajv-formats";
-import AjvErrors from "ajv-errors";
+// import AjvErrors from "ajv-errors";
 import {context as contextSchema} from "douane/lib/schema/context";
 import {getGQLWorkspace} from "misc/utils";
 import {ContextException} from 'exceptions/ContextException';
 import {cndTypes,mktgFormEnum} from "douane/lib/config";
 
-// const ajv = new Ajv({useDefaults:true});
-const ajv = new Ajv({
-    allErrors: true,
-    strict: false
-});
+const ajv = new Ajv({useDefaults:true});
+// const ajv = new Ajv({
+//     allErrors: true,
+//     strict: false
+// });
 AjvFormats(ajv);
-AjvErrors(ajv);
+// AjvErrors(ajv);
 
 //TODO le try catch doit etre fait ici et un component react doit etre retourne
 export const contextValidator = (context) =>{
