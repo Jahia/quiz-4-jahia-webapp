@@ -1,5 +1,5 @@
-import {gql} from "@apollo/client";
-import {CORE_NODE_FIELDS} from "./fragments"
+import {gql} from '@apollo/client';
+import {CORE_NODE_FIELDS} from './fragments';
 
 export const GetPersonalizedScoreVariant = gql`
     ${CORE_NODE_FIELDS}
@@ -19,4 +19,4 @@ export const GetPersonalizedScoreVariant = gql`
                 }
             }
         }
-    }`
+    }`;

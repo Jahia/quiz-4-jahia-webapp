@@ -1,33 +1,34 @@
-import classnames from "clsx";
-import {Media} from "components/Media";
-import {Typography} from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import React from "react";
-import cssSharedClasses from "components/cssSharedClasses";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import PropTypes from 'prop-types';
+import classnames from 'clsx';
+import {Media, cssSharedClasses} from 'components';
+import {Typography, CircularProgress} from '@material-ui/core';
 
-export const Loading = (props) => {
-    const { t } = useTranslation();
-    const {media,show,msg} = props
+import {useTranslation} from 'react-i18next';
+import {media} from 'types';
+
+export const Loading = ({media, isActive = false, msg, ...props}) => {
+    const {t} = useTranslation();
     const sharedClasses = cssSharedClasses(props);
 
     return (
         <div className={classnames(
             sharedClasses.item,
             sharedClasses.showOverlay,
-            (show ? 'active':'')
-        )}>
+            (isActive ? 'active' : '')
+        )}
+        >
             {media &&
             <Media id={media.id}
                    types={media.types}
                    path={media.path}
-                   alt={"background"}
-            />
-            }
+                   alt="background"
+            />}
             <div className={classnames(
                 sharedClasses.caption,
                 sharedClasses.captionMain
-            )}>
+            )}
+            >
                 <Typography
                     className={classnames(
                         sharedClasses.wait,
@@ -41,4 +42,10 @@ export const Loading = (props) => {
             </div>
         </div>
     );
-}
+};
+
+Loading.propTypes = {
+    media,
+    isActive: PropTypes.bool.isRequired,
+    msg: PropTypes.string
+};

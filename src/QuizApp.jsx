@@ -1,71 +1,71 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ApolloProvider } from '@apollo/client';
-import {ErrorHandler,App} from './components';
+import {ApolloProvider} from '@apollo/client';
+import {ErrorHandler, App} from './components';
 
 import * as serviceWorker from 'misc/serviceWorker';
 
 import {StylesProvider, createGenerateClassName} from '@material-ui/core/styles';
 import {getRandomString} from 'misc/utils';
 
-import {contextValidator} from "douane";
-import {Store} from "store";
-import {JahiaCtxProvider,AppCtxProvider} from "./contexts";
-import {CxsCtxProvider} from "./unomi/cxs";
-import {getClient, GetQuiz} from "./webappGraphql";
+import {contextValidator} from 'douane';
+import {Store} from 'store';
+import {JahiaCtxProvider, AppCtxProvider} from './contexts';
+import {CxsCtxProvider} from './unomi/cxs';
+import {getClient, GetQuiz} from './webappGraphql';
 
 import 'index.css';
-import {syncTracker} from "misc/trackerWem";
-import {formatQuizJcrProps} from "components/Quiz/QuizModel";
+import {syncTracker} from 'misc/trackerWem';
+import {formatQuizJcrProps} from 'components/Quiz/QuizModel';
 
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import {appLanguageBundle} from "i18n/resources";
+import i18n from 'i18next';
+import {initReactI18next} from 'react-i18next';
+import {appLanguageBundle} from 'i18n/resources';
 
-async function getQuizData ({client,workspace,locale,quizId}){
+async function getQuizData({client, workspace, locale, quizId}) {
     const {data} = await client.query({
         query: GetQuiz,
-        variables:{
+        variables: {
             workspace,
-            language:locale,
-            id:quizId
-        },
-        // skip:!quizId
+            language: locale,
+            id: quizId
+        }
+        // Skip:!quizId
     });
     return formatQuizJcrProps(data.response.quiz);
 }
 
-const render= async (target,context)=>{
+const render = async (target, context) => {
     const root = ReactDOM.createRoot(document.getElementById(target));
 
-    try{
+    try {
         context = contextValidator(context);
 
         const generateClassName = createGenerateClassName({
-            // disableGlobal:true,
+            // DisableGlobal:true,
             seed: getRandomString(8, 'aA')
         });
-        const {host,workspace,isEdit,locale,quizId,gqlServerUrl,contextServerUrl,appContext, cndTypes,scope,previewCm,previewTarget} = context;
-        i18n.use(initReactI18next) // passes i18n down to react-i18next
+        const {host, workspace, isEdit, locale, quizId, gqlServerUrl, contextServerUrl, appContext, cndTypes, scope, previewCm, previewTarget} = context;
+        await i18n.use(initReactI18next) // Passes i18n down to react-i18next
             .init({
-                resources:appLanguageBundle,
+                resources: appLanguageBundle,
                 lng: locale,
-                fallbackLng: "en",
+                fallbackLng: 'en',
                 interpolation: {
-                    escapeValue: false // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+                    escapeValue: false // React already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
                 }
             });
 
-        const isPreview = workspace !== "LIVE";
-        const client = getClient(gqlServerUrl)
-        const quizData = await getQuizData({client,workspace,locale,quizId});
-        const {transitionIsEnabled,transitionLabel,resetIsEnabled : resetBtnIsEnabled,browsingIsEnabled} = quizData.quizConfig;
-        const focusId = previewCm && !!previewTarget ? previewTarget.id : quizData.id;
+        const isPreview = workspace !== 'LIVE';
+        const client = getClient(gqlServerUrl);
+        const quizData = await getQuizData({client, workspace, locale, quizId});
+        const {isTransitionEnabled, transitionLabel, isResetEnabled: resetBtnIsEnabled, isBrowsingEnabled} = quizData.quizConfig;
+        const focusId = previewCm && Boolean(previewTarget) ? previewTarget.id : quizData.id;
 
-        if(workspace === "LIVE" && !window.wem){
-            if(!window.digitalData)
-                window.digitalData= {
-                    _webapp:true,
+        if (workspace === 'LIVE' && !window.wem) {
+            if (!window.digitalData) {
+                window.digitalData = {
+                    _webapp: true,
                     scope,
                     site: {
                         siteInfo: {
@@ -74,7 +74,7 @@ const render= async (target,context)=>{
                     },
                     page: {
                         pageInfo: {
-                            pageID: `WebApp Quiz`,
+                            pageID: 'WebApp Quiz',
                             pageName: document.title,
                             pagePath: document.location.pathname,
                             destinationURL: document.location.origin + document.location.pathname,
@@ -83,13 +83,13 @@ const render= async (target,context)=>{
                             tags: []
                         },
                         attributes: {
-                            quizKey:quizData.quizContent.quizKey,
-                            quizPath:quizData.path
+                            quizKey: quizData.quizContent.quizKey,
+                            quizPath: quizData.path
                         },
                         consentTypes: []
                     },
                     events: [],
-                    // loadCallbacks:[{
+                    // LoadCallbacks:[{
                     //     priority:5,
                     //     name:'Unomi tracker context loaded',
                     //     execute: () => {
@@ -98,24 +98,27 @@ const render= async (target,context)=>{
                     // }],
                     wemInitConfig: {
                         contextServerUrl,
-                        timeoutInMilliseconds: "1500",
-                        // contextServerCookieName: "context-profile-id",
+                        timeoutInMilliseconds: '1500',
+                        // ContextServerCookieName: "context-profile-id",
                         activateWem: true,
-                        // trackerProfileIdCookieName: "wem-profile-id",
-                        trackerSessionIdCookieName: "wem-session-id"
+                        // TrackerProfileIdCookieName: "wem-profile-id",
+                        trackerSessionIdCookieName: 'wem-session-id'
                     }
-                }
+                };
+            }
+
             window.wem = syncTracker();
         }
+
         root.render(
             <React.StrictMode>
                 <StylesProvider generateClassName={generateClassName}>
                     <JahiaCtxProvider value={{
                         workspace,
                         locale,
-                        quizId:quizData.id,
-                        quizPath:quizData.path,
-                        quizType:quizData.type,
+                        quizId: quizData.id,
+                        quizPath: quizData.path,
+                        quizType: quizData.type,
                         host,
                         isEdit,
                         contextServerUrl,
@@ -123,21 +126,23 @@ const render= async (target,context)=>{
                         previewCm,
                         previewTarget,
                         isPreview
-                    }}>
+                    }}
+                    >
                         <Store quizData={quizData} focusId={focusId}>
                             <ApolloProvider client={client}>
-                                <div style={{overflow:'hidden'}}>
+                                <div style={{overflow: 'hidden'}}>
                                     <CxsCtxProvider>
                                         <AppCtxProvider value={{
-                                            languageBundle:quizData.languageBundle,
+                                            languageBundle: quizData.languageBundle,
                                             ...appContext,
-                                            transitionIsEnabled,
+                                            isTransitionEnabled,
                                             transitionLabel,
-                                            transitionTimeout:1000,
+                                            transitionTimeout: 1000,
                                             resetBtnIsEnabled,
-                                            browsingIsEnabled: (browsingIsEnabled && !isEdit && !previewCm),
+                                            isBrowsingEnabled: (isBrowsingEnabled && !isEdit && !previewCm),
                                             scope
-                                        }}>
+                                        }}
+                                        >
                                             <App quizData={quizData}/>
                                         </AppCtxProvider>
                                     </CxsCtxProvider>
@@ -148,9 +153,9 @@ const render= async (target,context)=>{
                 </StylesProvider>
             </React.StrictMode>
         );
-    }catch(e){
-        console.error("error : ",e);
-        //Note: create a generic error handler
+    } catch (e) {
+        console.error('error : ', e);
+        // Note: create a generic error handler
         root.render(
             <ErrorHandler
                 item={e.message}
@@ -159,7 +164,7 @@ const render= async (target,context)=>{
             document.getElementById(target)
         );
     }
-}
+};
 
 window.quizUIApp = render;
 

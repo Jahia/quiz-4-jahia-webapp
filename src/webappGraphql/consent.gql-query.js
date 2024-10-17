@@ -1,5 +1,5 @@
-import {gql} from "@apollo/client";
-import {CORE_NODE_FIELDS} from "./fragments"
+import {gql} from '@apollo/client';
+import {CORE_NODE_FIELDS} from './fragments';
 
 export const GetConsent = gql`
     ${CORE_NODE_FIELDS}
@@ -14,6 +14,5 @@ export const GetConsent = gql`
                 actived: property(language:$language,name:"wem:activated"){ value }
             }
         }
-    }`
-
+    }`;
 

@@ -1,5 +1,5 @@
-import {gql} from "@apollo/client";
-import {CORE_NODE_FIELDS,QUIZ_STATIC_LABELS,MEDIA_PROPERTY} from "./fragments"
+import {gql} from '@apollo/client';
+import {CORE_NODE_FIELDS, QUIZ_STATIC_LABELS, MEDIA_PROPERTY} from './fragments';
 
 export const GetQuiz = gql`
     ${CORE_NODE_FIELDS}
@@ -29,5 +29,4 @@ export const GetQuiz = gql`
             }
         }
     }`;
-
 

@@ -1,5 +1,5 @@
-import {gql} from "@apollo/client";
-import {CORE_NODE_FIELDS,MEDIA_PROPERTY} from "./fragments";
+import {gql} from '@apollo/client';
+import {CORE_NODE_FIELDS, MEDIA_PROPERTY} from './fragments';
 
 export const GetWarmup = gql`
     ${CORE_NODE_FIELDS}

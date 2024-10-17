@@ -1,1 +1,1 @@
-export * from "./Percentage"
+export * from './Percentage';

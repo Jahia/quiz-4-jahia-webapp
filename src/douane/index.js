@@ -1,22 +1,21 @@
-import * as Ajv from "ajv";
-import AjvFormats from "ajv-formats";
-// import AjvErrors from "ajv-errors";
-import {context as contextSchema} from "douane/lib/schema/context";
-import {getGQLWorkspace} from "misc/utils";
+import * as Ajv from 'ajv';
+import addFormats from 'ajv-formats';
+// Import AjvErrors from "ajv-errors";
+import {context as contextSchema} from 'douane/lib/schema/context';
+import {getGQLWorkspace} from 'misc/utils';
 import {ContextException} from 'exceptions/ContextException';
-import {cndTypes,mktgFormEnum} from "douane/lib/config";
+import {cndTypes, mktgFormEnum} from 'douane/lib/config';
 
-const ajv = new Ajv({useDefaults:true});
-// const ajv = new Ajv({
+const ajv = new Ajv({useDefaults: true});
+// Const ajv = new Ajv({
 //     allErrors: true,
 //     strict: false
 // });
-AjvFormats(ajv);
+addFormats(ajv);
 // AjvErrors(ajv);
 
-//TODO le try catch doit etre fait ici et un component react doit etre retourne
-export const contextValidator = (context) =>{
-
+// Note le try catch doit etre fait ici et un component react doit etre retourne
+export const contextValidator = context => {
     const valid = ajv.validate(contextSchema, context);
     if (!valid) {
         throw new ContextException({
@@ -26,10 +25,10 @@ export const contextValidator = (context) =>{
     }
 
     context.workspace = getGQLWorkspace(context.workspace);
-    context.cndTypes=cndTypes;
+    context.cndTypes = cndTypes;
     context.appContext = {
         mktgFormEnum
-    }
+    };
 
     return context;
-}
+};

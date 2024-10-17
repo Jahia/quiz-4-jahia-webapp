@@ -1,13 +1,12 @@
-import {useTracker as unomiTracker} from "apache-unomi-tracker";
+import {useTracker as unomiTracker} from 'apache-unomi-tracker';
 
 export const syncTracker = () => {
-    //needed for isCrawler
-    window.Buffer = window.Buffer || require("buffer").Buffer;
+    // Needed for isCrawler
+    window.Buffer = window.Buffer || require('buffer').Buffer;
 
     const wem = {
         ...unomiTracker(),
         init: function () {
-
             const {
                 contextServerUrl,
                 trackerSessionIdCookieName = 'wem-session-id'
@@ -15,7 +14,7 @@ export const syncTracker = () => {
 
             wem.contextServerUrl = contextServerUrl;
 
-            if (wem.getCookie(trackerSessionIdCookieName) == null) {
+            if (wem.getCookie(trackerSessionIdCookieName) === null) {
                 wem.setCookie(trackerSessionIdCookieName, wem.generateGuid());
             }
 
@@ -25,7 +24,7 @@ export const syncTracker = () => {
                 window.cxs = wem.getLoadedContext();
             }, 'Unomi tracker context loaded', 5);
 
-            //Load page view event
+            // Load page view event
             const pageViewEvent = wem.buildEvent(
                 'view',
                 wem.buildTargetPage(),
@@ -36,59 +35,59 @@ export const syncTracker = () => {
             wem.startTracker();
             wem.loadContext();
         }
-    }
+    };
     wem.init();
     return wem;
 };
 
-export const syncVideoStatus = ({quiz,parentId,status,player,video}) =>{
-    const  event = window.wem.buildEvent("clickPlayer",
-        window.wem.buildTarget(video.id,"react-video-player",{
-            video:{
+export const syncVideoStatus = ({quiz, parentId, status, player, video}) => {
+    const event = window.wem.buildEvent('clickPlayer',
+        window.wem.buildTarget(video.id, 'react-video-player', {
+            video: {
                 ...video,
                 duration: player.current.getDuration(),
                 currentTime: player.current.getCurrentTime(),
                 status: status
             }
         }),
-        window.wem.buildSource(quiz.id,quiz.type,{
+        window.wem.buildSource(quiz.id, quiz.type, {
             quiz,
-            warmup:{
-                id:parentId
-            },
+            warmup: {
+                id: parentId
+            }
 
         }));
 
     window.wem.collectEvent(event);
-}
+};
 
-export const syncVisitorData = ({qna,propertyName,propertyValue}) =>{
-    // const flattenedPropertyName = `flattenedProperties.${propertyName}`;
+export const syncVisitorData = ({qna, propertyName, propertyValue}) => {
+    // Const flattenedPropertyName = `flattenedProperties.${propertyName}`;
     const eventPropertyName = `properties.${propertyName}`;
 
-    const  event = window.wem.buildEvent("updateQuizVisitorData",
-        window.wem.buildTarget(propertyName,"user-property"),
-        window.wem.buildSource(qna.id,qna.type,{
+    const event = window.wem.buildEvent('updateQuizVisitorData',
+        window.wem.buildTarget(propertyName, 'user-property'),
+        window.wem.buildSource(qna.id, qna.type, {
             qna
         }));
 
     event.properties = {
-        update : {
-            [eventPropertyName]:propertyValue
+        update: {
+            [eventPropertyName]: propertyValue
         }
-    }
+    };
     window.wem.collectEvent(event);
-}
+};
 
-export const syncQuizScore = ({quiz,score}) => {
+export const syncQuizScore = ({quiz, score}) => {
     const propertyName = `quiz-score-${quiz.quizKey}`;
     const eventPropertyName = `properties.${propertyName}`;
-    const {quizKey:key, title, subtitle} = quiz;
+    const {quizKey: key, title, subtitle} = quiz;
 
-    const  event = window.wem.buildEvent("setQuizScore",
-        window.wem.buildTarget(propertyName,"user-property"),
-        window.wem.buildSource(quiz.id,quiz.type,{
-            quiz:{
+    const event = window.wem.buildEvent('setQuizScore',
+        window.wem.buildTarget(propertyName, 'user-property'),
+        window.wem.buildSource(quiz.id, quiz.type, {
+            quiz: {
                 title,
                 subtitle,
                 key
@@ -96,9 +95,9 @@ export const syncQuizScore = ({quiz,score}) => {
         }));
 
     event.properties = {
-        update : {
-            [eventPropertyName]:score
+        update: {
+            [eventPropertyName]: score
         }
-    }
+    };
     window.wem.collectEvent(event);
-}
+};

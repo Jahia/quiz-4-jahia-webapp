@@ -26,12 +26,24 @@
     "react-player": "^2.16.0",
     "react-scripts": "^5.0.1"
   },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.16.0",
+    "@jahia/eslint-config": "^2.1.2",
+    "eslint": "^8.43.0",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build-jahia": "react-scripts build && rsync -av --delete --exclude 'README.txt' build/static/css/ ../quiz-4-jahia/src/main/resources/css/webapp/ && rsync -av --delete --exclude 'README.txt' build/static/js/ ../quiz-4-jahia/src/main/resources/javascript/webapp/ && rsync -av --delete build/static/media/ ../quiz-4-jahia/src/main/resources/fonts/webapp/",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --ext js,jsx .",
+    "lint:fix": "eslint --ext js,jsx --fix ."
   },
   "eslintConfig": {
     "extends": "react-app"

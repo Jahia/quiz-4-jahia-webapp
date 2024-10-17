@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
+import PropTypes from 'prop-types';
 import parse, {domToReact} from 'html-react-parser';
 import {JahiaCtx} from 'contexts';
 import {resolveJahiaEmbeddedURL, resolveJahiaMediaURL} from 'misc/utils';
-
 
 export const EmbeddedPathInHtmlResolver = ({htmlAsString}) => {
     const {workspace, locale, host, isPreview, isEdit} = useContext(JahiaCtx);
@@ -23,19 +23,19 @@ export const EmbeddedPathInHtmlResolver = ({htmlAsString}) => {
                 const filePathExec = filePathRegex.exec(domElement.attribs.src);
                 if (filePathExec) {
                     const {groups: {filePath}} = filePathExec;
-                    domElement.attribs.src = resolveJahiaMediaURL({host,path: filePath, workspace});
+                    domElement.attribs.src = resolveJahiaMediaURL({host, path: filePath, workspace});
                 }
 
                 return domElement;
             }
 
             if (domElement.attribs.href) {// Resolve link
-                const nodePathRegex = /\{mode\}\/\{lang\}(?<nodePath>[\w\d/.-]*)/gm;///\{mode\}\/\{lang\}(?<nodePath>[\w\d/.-]*)\.\w+$/gm;
+                const nodePathRegex = /\{mode\}\/\{lang\}(?<nodePath>[\w\d/.-]*)/gm;/// \{mode\}\/\{lang\}(?<nodePath>[\w\d/.-]*)\.\w+$/gm;
                 const nodePathExec = nodePathRegex.exec(domElement.attribs.href);
                 if (nodePathExec) {
                     const {groups: {nodePath}} = nodePathExec;
                     return (
-                        <a href={resolveJahiaEmbeddedURL({path:nodePath,host,locale,isPreview,isEdit})}
+                        <a href={resolveJahiaEmbeddedURL({path: nodePath, host, locale, isPreview, isEdit})}
                            target={domElement.attribs.target}
                            className={domElement.attribs.class}
                            title={domElement.attribs.title}
@@ -50,4 +50,8 @@ export const EmbeddedPathInHtmlResolver = ({htmlAsString}) => {
 
     const html = parse(htmlAsString, options);
     return (<>{html}</>);
+};
+
+EmbeddedPathInHtmlResolver.propTypes = {
+    htmlAsString: PropTypes.string.isRequired
 };

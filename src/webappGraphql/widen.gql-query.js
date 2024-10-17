@@ -1,5 +1,5 @@
-import {gql} from "@apollo/client";
-import {CORE_NODE_FIELDS} from "./fragments"
+import {gql} from '@apollo/client';
+import {CORE_NODE_FIELDS} from './fragments';
 
 export const GetWidenMedia = gql`
     ${CORE_NODE_FIELDS}
@@ -13,6 +13,5 @@ export const GetWidenMedia = gql`
                 videoURL: property(name:"wden:videoStreamURL"){ value }
             }
         }
-    }`
-
+    }`;
 

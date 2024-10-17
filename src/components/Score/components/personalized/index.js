@@ -1,1 +1,1 @@
-export * from "./PersonalizedSlide"
+export * from './PersonalizedSlide';

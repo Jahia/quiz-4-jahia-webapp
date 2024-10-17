@@ -1,2 +1,2 @@
-export * from "./percentage";
-export * from "./personalized";
+export * from './percentage';
+export * from './personalized';

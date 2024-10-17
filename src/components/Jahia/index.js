@@ -1,1 +1,1 @@
-export * from "./EmbeddedPathInHtmlResolver"
+export * from './EmbeddedPathInHtmlResolver';

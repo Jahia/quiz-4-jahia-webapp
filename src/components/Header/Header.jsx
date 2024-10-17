@@ -1,81 +1,81 @@
-import {Indicator} from "components/Header/Indicator";
-import {Button, Typography} from "@material-ui/core";
-import React from "react";
-import {AppCtx, JahiaCtx, StoreCtx} from "contexts";
-import {makeStyles} from "@material-ui/core/styles";
-import {manageTransition} from "misc/utils";
+import {Indicator} from 'components/Header/Indicator';
+import {Button, Typography} from '@material-ui/core';
+import React from 'react';
+import {AppCtx, JahiaCtx, StoreCtx} from 'contexts';
+import {makeStyles} from '@material-ui/core/styles';
+import {manageTransition} from 'misc/utils';
 
 const useStyles = makeStyles(theme => ({
-    wrapper:{
+    wrapper: {
         zIndex: 5,
-        position:'relative',
-        '.showResult &':{
-            backgroundColor: theme.palette.grey['300'],
+        position: 'relative',
+        '.showResult &': {
+            backgroundColor: theme.palette.grey['300']
         }
     },
-    header:{
+    header: {
 
-        position:'relative',
+        position: 'relative',
         display: 'flex',
-        flexDirection:'column',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        // width:'100%',
+        // Width:'100%',
         padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding.lg}`,
         [theme.breakpoints.between('xs', 'sm')]: {
-            padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding.main}`,
+            padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding.main}`
         }
 
     },
     headerIndicators: {
         display: 'flex',
         justifyContent: 'center',
-        zIndex:4,
+        zIndex: 4,
         listStyle: 'none',
-        padding:0,
-        marginTop:0,
+        padding: 0,
+        marginTop: 0,
         marginBottom: `${theme.spacing(2)}px`,
-        '.showResult &':{
-            marginBottom:0,
+        '.showResult &': {
+            marginBottom: 0,
             [theme.breakpoints.between('xs', 'sm')]: {
-                marginBottom:`${theme.spacing(1)}px`
+                marginBottom: `${theme.spacing(1)}px`
             }
         }
     },
-    headerResult:{
+    headerResult: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         height: 0,
-        width:'100%',
+        width: '100%',
         maxWidth: '1280px',
-        overflow:"hidden",
-        transition:theme.transitions.create(['height'],{
-            duration: theme.transitions.duration.standard,//'10s',//
-            easing: theme.transitions.easing.header,
+        overflow: 'hidden',
+        transition: theme.transitions.create(['height'], {
+            duration: theme.transitions.duration.standard, // '10s',//
+            easing: theme.transitions.easing.header
         }),
-        ".showResult &":{
-            height: theme.geometry.header.result.height,//'45px',//'auto',
+        '.showResult &': {
+            height: theme.geometry.header.result.height, // '45px',//'auto',
             marginBottom: `${theme.spacing(1)}px`
 
         }
     },
-    headerText:{
+    headerText: {
         textTransform: 'capitalize',
         fontWeight: theme.typography.fontWeightBold,
         color: theme.palette.grey[700],
         [theme.breakpoints.between('xs', 'sm')]: {
-            fontSize:'1.75rem'
+            fontSize: '1.75rem'
         }
-    },
+    }
 }));
 
-export const Header = (props) => {
+export const Header = props => {
     const classes = useStyles(props);
 
-    const { isPreview } = React.useContext(JahiaCtx);
-    const { state, dispatch } = React.useContext(StoreCtx);
-    const {transitionIsEnabled, transitionTimeout, browsingIsEnabled, languageBundle } = React.useContext(AppCtx);
+    const {isPreview} = React.useContext(JahiaCtx);
+    const {state, dispatch} = React.useContext(StoreCtx);
+    const {isTransitionEnabled, transitionTimeout, isBrowsingEnabled, languageBundle} = React.useContext(AppCtx);
 
     const {
         slideSet,
@@ -86,68 +86,79 @@ export const Header = (props) => {
 
     const handleNextSlide = () =>
         manageTransition({
-            transitionIsEnabled,
+            isTransitionEnabled,
             transitionTimeout,
             dispatch,
-            payload:{
-                case:"NEXT_SLIDE"
+            payload: {
+                case: 'NEXT_SLIDE'
             }
         });
 
     const handleShowScore = () =>
         manageTransition({
-            transitionIsEnabled,
+            isTransitionEnabled,
             transitionTimeout,
             dispatch,
-            payload:{
-                case:"SHOW_SCORE",
-                payload:{
-                    isPreview,
+            payload: {
+                case: 'SHOW_SCORE',
+                payload: {
+                    isPreview
                 }
             }
         });
 
-    const getHeaderResultLabel=()=>{
-        if(currentResult)
+    const getHeaderResultLabel = () => {
+        if (currentResult) {
             return languageBundle.correctAnswer;
+        }
+
         return languageBundle.wrongAnswer;
-    }
+    };
 
-    const getHeaderBtnNext=()=>{
-        if(nextIsScore)
-            return  <Button onClick={handleShowScore}
-                            disabled={!showNext}>
-                {languageBundle.btnShowResults}
+    const getHeaderBtnNext = () => {
+        if (nextIsScore) {
+            return (
+                <Button disabled={!showNext}
+                        onClick={handleShowScore}
+                >
+                    {languageBundle.btnShowResults}
+                </Button>
+            );
+        }
+
+        return (
+            <Button disabled={!showNext}
+                    onClick={handleNextSlide}
+            >
+                {languageBundle.btnNextQuestion}
             </Button>
-        return  <Button onClick={handleNextSlide}
-                        disabled={!showNext}>
-            {languageBundle.btnNextQuestion}
-        </Button>
-    }
+        );
+    };
 
-    return(
+    return (
         <div className={classes.wrapper}>
-        <div className={classes.header}>
-            <ol className={classes.headerIndicators}>
-                {slideSet.map( itemId =>
-                    <Indicator
+            <div className={classes.header}>
+                <ol className={classes.headerIndicators}>
+                    {slideSet.map(itemId => (
+                        <Indicator
                         key={itemId}
                         id={itemId}
-                        enabled={browsingIsEnabled}
+                        enabled={isBrowsingEnabled}
                     />
+                  )
                 )}
-            </ol>
-            {languageBundle &&
-            <div className={classes.headerResult}>
-                <Typography className={classes.headerText}
-                            variant="h4">
-                    {getHeaderResultLabel()}
-                </Typography>
+                </ol>
+                {languageBundle &&
+                <div className={classes.headerResult}>
+                    <Typography className={classes.headerText}
+                                variant="h4"
+                    >
+                        {getHeaderResultLabel()}
+                    </Typography>
 
-                {getHeaderBtnNext()}
+                    {getHeaderBtnNext()}
+                </div>}
             </div>
-            }
         </div>
-        </div>
-    )
+    );
 };
