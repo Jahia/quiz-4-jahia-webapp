@@ -4,6 +4,7 @@ import {JahiaCtx} from 'contexts';
 import {WidenAsset} from 'components/Media/components/widen';
 import {JahiaAsset} from 'components/Media/components/jahia';
 import {CloudinaryAsset} from 'components/Media/components/cloudinary';
+import {mediaShape} from 'types';
 
 export const Media = ({id, types, path, sourceID, alt}) => {
     const {cndTypes} = React.useContext(JahiaCtx);
@@ -22,9 +23,7 @@ export const Media = ({id, types, path, sourceID, alt}) => {
 };
 
 Media.propTypes = {
-    id: PropTypes.string,
-    types: PropTypes.array,
-    path: PropTypes.string,
+    ...mediaShape,
     sourceID: PropTypes.string,
     alt: PropTypes.string
 };

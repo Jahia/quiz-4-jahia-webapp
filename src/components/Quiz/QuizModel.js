@@ -1,4 +1,4 @@
-import {getTypes} from 'misc/utils';
+import {getCoreProps, getMediaProps} from 'misc/utils';
 import {cndTypes} from 'douane/lib/config';
 import DOMPurify from 'dompurify';
 
@@ -49,39 +49,34 @@ const initLanguageBundle = quizJcrProps =>
 const removePersoResult = childNodes =>
     childNodes?.filter(
         ({primaryNodeType: {name}}) => name !== cndTypes.SCORE_PERSO
-    )?.map(node => ({
-        id: node.uuid,
-        type: node.primaryNodeType.name,
-        types: getTypes(node)
+    )?.map(node => getCoreProps({
+        node
     })
     ) || [];
 
 export const formatQuizJcrProps = quizJcrProps => ({
     // NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
-    id: quizJcrProps.uuid,
-    path: quizJcrProps.path,
-    type: quizJcrProps.primaryNodeType?.name,
-    types: getTypes(quizJcrProps),
-    quizContent: {
+    core: getCoreProps({
+        node: quizJcrProps
+    }),
+    content: {
         quizKey: quizJcrProps.quizKey.value,
         title: quizJcrProps.title,
         subtitle: quizJcrProps.subtitle?.value || '',
         description: DOMPurify.sanitize(quizJcrProps.description?.value || '', {ADD_ATTR: ['target']}),
         duration: quizJcrProps.duration?.value || '',
-        media: {
-            id: quizJcrProps.media?.node?.uuid || null,
-            types: getTypes(quizJcrProps.media?.node),
-            path: quizJcrProps.media?.node?.path || null
-        },
+        media: getMediaProps({
+            node: quizJcrProps.media?.node
+        }),
         childNodes: removePersoResult(quizJcrProps.children?.nodes),
         scorePerso: quizJcrProps.children?.nodes?.find(({primaryNodeType: {name}}) => name === cndTypes.SCORE_PERSO),
         mktgForm: quizJcrProps.mktgForm?.value,
         mktoConfig: getMktoConfig(quizJcrProps.mktoConfig?.value)
     },
-    quizConfig: {
+    config: {
         userTheme: getTheme(quizJcrProps.userTheme?.value || {}),
-        isTransitionEnabled: JSON.parse(quizJcrProps.transition?.value || false),
         transitionLabel: quizJcrProps.transitionLabel?.value || '',
+        isTransitionEnabled: JSON.parse(quizJcrProps.transition?.value || false),
         isResetEnabled: JSON.parse(quizJcrProps.reset?.value || false),
         isBrowsingEnabled: JSON.parse(quizJcrProps.browsing?.value || false)
     },

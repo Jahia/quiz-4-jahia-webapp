@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {JahiaCtx, StoreCtx} from 'contexts';
-import {CxsCtx} from 'unomi/cxs';
+import {JahiaCtx, StoreCtx, CxsCtx} from 'contexts';
 import {useLazyQuery} from '@apollo/client';
 import {GetPersonalizedContentVariant} from 'webappGraphql';
 import {Typography, makeStyles} from '@material-ui/core';
@@ -33,10 +32,9 @@ const PreviewContentNotRendered = ({media, isActive, ...props}) => {
         )}
         >
             {media &&
-            <Media id={media.id}
-                   types={media.types}
-                   path={media.path}
-                   alt="background"
+            <Media
+                {...media}
+                alt="background"
             />}
             <div
                 className={classnames(

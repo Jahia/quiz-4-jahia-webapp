@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {CxsCtx} from 'unomi/cxs';
-import {StoreCtx, AppCtx, JahiaCtx} from 'contexts';
+import {StoreCtx, AppCtx, JahiaCtx, CxsCtx} from 'contexts';
 import {Button, Typography, makeStyles} from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import InfoIcon from '@material-ui/icons/Info';
@@ -9,7 +8,6 @@ import {useMarketo, Media, cssSharedClasses, EmbeddedPathInHtmlResolver} from 'c
 import classnames from 'clsx';
 import {manageTransition} from 'misc/utils';
 import {useTranslation} from 'react-i18next';
-import {quizData} from 'types';
 
 const useStyles = makeStyles(theme => ({
     duration: {
@@ -48,13 +46,19 @@ MktoForm.propTypes = {
     formId: PropTypes.string.isRequired
 };
 
-export const Quiz = ({quizData: {id, quizContent: {title, subtitle, duration, description, media, mktgForm, mktoConfig}}, ...props}) => {
+export const Quiz = props => {
     const {t} = useTranslation();
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
     const cxs = React.useContext(CxsCtx);
     const {isEdit} = React.useContext(JahiaCtx);
-    const {isTransitionEnabled, transitionTimeout, mktgFormEnum, languageBundle} = React.useContext(AppCtx);
+    const {
+        core: {id},
+        content: {title, subtitle, duration, description, media, mktgForm, mktoConfig},
+        config: {isTransitionEnabled, transitionTimeout},
+        mktgFormEnum,
+        languageBundle
+    } = React.useContext(AppCtx);
 
     const {state, dispatch} = React.useContext(StoreCtx);
 
@@ -63,7 +67,7 @@ export const Quiz = ({quizData: {id, quizContent: {title, subtitle, duration, de
         currentSlide
     } = state;
 
-    const show = currentSlide === id;
+    const isActive = currentSlide === id;
 
     const onClick = () => {
         manageTransition({
@@ -138,11 +142,11 @@ export const Quiz = ({quizData: {id, quizContent: {title, subtitle, duration, de
         if (mktgForm === mktgFormEnum.MARKETO && mktoConfig && cxs) {
             return (
                 <MktoForm
-                baseUrl={mktoConfig.baseUrl}
-                munchkinId={mktoConfig.munchkinId}
-                formId={mktoConfig.formId}
-                whenReadyCallback={handleMktoForm}
-            />
+                    baseUrl={mktoConfig.baseUrl}
+                    munchkinId={mktoConfig.munchkinId}
+                    formId={mktoConfig.formId}
+                    whenReadyCallback={handleMktoForm}
+                />
             );
         }
     };
@@ -151,13 +155,11 @@ export const Quiz = ({quizData: {id, quizContent: {title, subtitle, duration, de
         <div className={classnames(
             sharedClasses.item,
             sharedClasses.showOverlay,
-            (show ? 'active' : '')
+            (isActive ? 'active' : '')
         )}
         >
             {media &&
-            <Media id={media.id}
-                   types={media.types}
-                   path={media.path}
+            <Media {...media}
                    alt={title}
             />}
 
@@ -199,6 +201,6 @@ export const Quiz = ({quizData: {id, quizContent: {title, subtitle, duration, de
     );
 };
 
-Quiz.propTypes = {
-    quizData
-};
+// Quiz.propTypes = {
+//     quizData
+// };

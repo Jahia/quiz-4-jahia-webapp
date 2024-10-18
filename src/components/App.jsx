@@ -1,17 +1,16 @@
 import React from 'react';
-import {JahiaCtx, StoreCtx} from '../contexts';
+import {JahiaCtx, StoreCtx, AppCtx} from '../contexts';
 import {Grid, Typography, makeStyles, ThemeProvider} from '@material-ui/core';
 import {Quiz, Warmup, Transition, Score, Header, Qna, ContentPerso, Preview, theme} from 'components';
 import classnames from 'clsx';
 
 import 'react-circular-progressbar/dist/styles.css';
 import {useTranslation} from 'react-i18next';
-import {quizData} from 'types';
 
 const useStyles = makeStyles(() => ({
     main: {
-        paddingTop: '108px', // ${theme.geometry.header.heights.min}
-        marginTop: '-108px',
+        paddingTop: '100px', // `${theme.geometry.header.heights.max}px` cannot use theme, theme is undefined
+        marginTop: '-100px',
         position: 'relative',
         '& *, &::after, &::before': {
             boxSizing: 'border-box'
@@ -23,10 +22,11 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export const App = ({quizData: {id, quizContent, quizConfig}, ...props}) => {
+export const App = props => {
     const {t} = useTranslation();
     const classes = useStyles(props);
     const {cndTypes, previewTarget} = React.useContext(JahiaCtx);
+    const {content: quizContent, config: quizConfig} = React.useContext(AppCtx);
 
     const {state} = React.useContext(StoreCtx);
     const {
@@ -38,7 +38,7 @@ export const App = ({quizData: {id, quizContent, quizConfig}, ...props}) => {
 
     const displayScore = () => {
         if (showScore) {
-            return <Score {...quizContent}/>;
+            return <Score/>;
         }
     };
 
@@ -69,11 +69,11 @@ export const App = ({quizData: {id, quizContent, quizConfig}, ...props}) => {
                 )}
                     >
                         <Transition/>
-                        {Boolean(previewTarget) && <Preview {...{previewTarget, quizContent}}/>}
+                        {Boolean(previewTarget) && <Preview {...{previewTarget, media: quizContent.media}}/>}
 
                         {!previewTarget &&
                         <>
-                            <Quiz id={id} {...quizContent}/>
+                            <Quiz/>
 
                             {quizContent.childNodes.map(node => {
                                 if (node.types.includes(cndTypes.QNA)) {
@@ -118,6 +118,6 @@ export const App = ({quizData: {id, quizContent, quizConfig}, ...props}) => {
     );
 };
 
-App.propTypes = {
-    quizData
-};
+// App.propTypes = {
+//     quizData
+// };

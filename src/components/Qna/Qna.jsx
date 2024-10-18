@@ -1,22 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import {useQuery} from '@apollo/client';
-
-import {AppCtx, JahiaCtx, StoreCtx} from 'contexts';
-
 import {GetQnA} from 'webappGraphql';
+import {useQuery} from '@apollo/client';
+import {AppCtx, JahiaCtx, StoreCtx} from 'contexts';
+import {formatQnaJcrProps} from './QnaModel';
 import {Answer} from './Answer';
-
-import {formatQnaJcrProps} from 'components/Qna/QnaModel';
-import {syncVisitorData} from 'misc/trackerWem';
-import {Media} from 'components/Media';
-import cssSharedClasses from 'components/cssSharedClasses';
+import {syncVisitorData, manageTransition} from 'misc';
+import {Media, Loading, cssSharedClasses} from 'components';
 import classnames from 'clsx';
-import {FormGroup, Typography, Button} from '@material-ui/core';
-import {makeStyles} from '@material-ui/core/styles';
-import {manageTransition} from 'misc/utils';
-import {Loading} from 'components/Loading';
+import {FormGroup, Typography, Button, makeStyles} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     questionGroup: {
@@ -107,12 +99,12 @@ const reducer = (qna, action) => {
     }
 };
 
-export const Qna = props => {
+export const Qna = ({id: qnaId, persoId, ...props}) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
-    const {id: qnaId, persoId} = props;
+
     const {workspace, locale, isPreview} = React.useContext(JahiaCtx);
-    const {isTransitionEnabled, transitionTimeout, languageBundle} = React.useContext(AppCtx);
+    const {config: {isTransitionEnabled, transitionTimeout}, languageBundle} = React.useContext(AppCtx);
     const {state, dispatch} = React.useContext(StoreCtx);
 
     const {
@@ -247,9 +239,7 @@ export const Qna = props => {
         )}
         >
             {qna.media &&
-                <Media id={qna.media.id}
-                       types={qna.media.types}
-                       path={qna.media.path}
+                <Media {...qna.media}
                        alt={qna.title}
                 />}
             <div className={sharedClasses.caption}>

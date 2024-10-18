@@ -1,21 +1,20 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import {ApolloProvider} from '@apollo/client';
-import {ErrorHandler, App} from './components';
+import {ErrorHandler, App} from 'components';
 
-import * as serviceWorker from 'misc/serviceWorker';
+import {serviceWorker, syncTracker, getRandomString} from 'misc';
 
 import {StylesProvider, createGenerateClassName} from '@material-ui/core/styles';
-import {getRandomString} from 'misc/utils';
 
 import {contextValidator} from 'douane';
 import {Store} from 'store';
-import {JahiaCtxProvider, AppCtxProvider} from './contexts';
-import {CxsCtxProvider} from './unomi/cxs';
+import {JahiaCtxProvider, AppCtxProvider, CxsCtxProvider} from './contexts';
+
 import {getClient, GetQuiz} from './webappGraphql';
 
 import 'index.css';
-import {syncTracker} from 'misc/trackerWem';
+
 import {formatQuizJcrProps} from 'components/Quiz/QuizModel';
 
 import i18n from 'i18next';
@@ -36,7 +35,7 @@ async function getQuizData({client, workspace, locale, quizId}) {
 }
 
 const render = async (target, context) => {
-    const root = ReactDOM.createRoot(document.getElementById(target));
+    const root = createRoot(document.getElementById(target));
 
     try {
         context = contextValidator(context);
@@ -46,6 +45,7 @@ const render = async (target, context) => {
             seed: getRandomString(8, 'aA')
         });
         const {host, workspace, isEdit, locale, quizId, gqlServerUrl, contextServerUrl, appContext, cndTypes, scope, previewCm, previewTarget} = context;
+
         await i18n.use(initReactI18next) // Passes i18n down to react-i18next
             .init({
                 resources: appLanguageBundle,
@@ -59,8 +59,8 @@ const render = async (target, context) => {
         const isPreview = workspace !== 'LIVE';
         const client = getClient(gqlServerUrl);
         const quizData = await getQuizData({client, workspace, locale, quizId});
-        const {isTransitionEnabled, transitionLabel, isResetEnabled: resetBtnIsEnabled, isBrowsingEnabled} = quizData.quizConfig;
-        const focusId = previewCm && Boolean(previewTarget) ? previewTarget.id : quizData.id;
+
+        const focusId = previewCm && Boolean(previewTarget) ? previewTarget.id : quizData.core.id;
 
         if (workspace === 'LIVE' && !window.wem) {
             if (!window.digitalData) {
@@ -83,8 +83,8 @@ const render = async (target, context) => {
                             tags: []
                         },
                         attributes: {
-                            quizKey: quizData.quizContent.quizKey,
-                            quizPath: quizData.path
+                            quizKey: quizData.content.quizKey,
+                            quizPath: quizData.core.path
                         },
                         consentTypes: []
                     },
@@ -116,9 +116,6 @@ const render = async (target, context) => {
                     <JahiaCtxProvider value={{
                         workspace,
                         locale,
-                        quizId: quizData.id,
-                        quizPath: quizData.path,
-                        quizType: quizData.type,
                         host,
                         isEdit,
                         contextServerUrl,
@@ -133,17 +130,18 @@ const render = async (target, context) => {
                                 <div style={{overflow: 'hidden'}}>
                                     <CxsCtxProvider>
                                         <AppCtxProvider value={{
-                                            languageBundle: quizData.languageBundle,
                                             ...appContext,
-                                            isTransitionEnabled,
-                                            transitionLabel,
-                                            transitionTimeout: 1000,
-                                            resetBtnIsEnabled,
-                                            isBrowsingEnabled: (isBrowsingEnabled && !isEdit && !previewCm),
-                                            scope
+                                            core: quizData.core,
+                                            content: quizData.content,
+                                            config: {
+                                                ...quizData.config,
+                                                transitionTimeout: 1000,
+                                                isBrowsingEnabled: (quizData.config.isBrowsingEnabled && !isEdit && !previewCm)
+                                            },
+                                            languageBundle: quizData.languageBundle
                                         }}
                                         >
-                                            <App quizData={quizData}/>
+                                            <App/>
                                         </AppCtxProvider>
                                     </CxsCtxProvider>
                                 </div>

@@ -6,10 +6,10 @@ const defaultTheme = () => ({
         header: {
             heights: {
                 min: 71,
-                max: 108
+                max: 100
             },
             result: {
-                height: '45px'
+                height: '37px'
             }
         },
         item: {

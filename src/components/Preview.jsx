@@ -3,9 +3,9 @@ import {cndTypes} from 'douane/lib/config';
 import {Qna, Quiz, Warmup, ContentPerso, Score} from 'components';
 import {Typography} from '@material-ui/core';
 import {useTranslation} from 'react-i18next';
-import {previewTarget, quizContent} from 'types';
+import {previewTarget, media} from 'types';
 
-export const Preview = ({previewTarget: {id, type}, quizContent: {media}, ...props}) => {
+export const Preview = ({previewTarget: {id, type}, media, ...props}) => {
     const {t} = useTranslation();
 
     switch (true) {
@@ -18,7 +18,7 @@ export const Preview = ({previewTarget: {id, type}, quizContent: {media}, ...pro
         case cndTypes.CONTENT_PERSO.includes(type):
             return <ContentPerso id={id} media={media}/>;
         case type === cndTypes.SCORE_PERSO:
-            return <Score {...props}/>;
+            return <Score/>;
         default:
             return (
                 <Typography color="error"
@@ -32,5 +32,5 @@ export const Preview = ({previewTarget: {id, type}, quizContent: {media}, ...pro
 
 Preview.propTypes = {
     previewTarget,
-    quizContent
+    media
 };

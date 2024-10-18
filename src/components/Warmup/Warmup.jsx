@@ -24,7 +24,7 @@ export const Warmup = ({id: warmupId, persoId, ...props}) => {
     const sharedClasses = cssSharedClasses(props);
 
     const {workspace, locale, cndTypes} = React.useContext(JahiaCtx);
-    const {isTransitionEnabled, transitionTimeout, languageBundle} = React.useContext(AppCtx);
+    const {config: {isTransitionEnabled, transitionTimeout}, languageBundle} = React.useContext(AppCtx);
     const {state, dispatch} = React.useContext(StoreCtx);
 
     const {
@@ -78,10 +78,10 @@ export const Warmup = ({id: warmupId, persoId, ...props}) => {
         if (currentSlide === persoId) {
             return (
                 <ContentPerso
-                key={persoId}
-                id={persoId}
-                media={media}
-            />
+                    key={persoId}
+                    id={persoId}
+                    media={media}
+                />
             );
         }
     };
@@ -96,9 +96,7 @@ export const Warmup = ({id: warmupId, persoId, ...props}) => {
             >
                 {media &&
                     <Media
-                        id={media.id}
-                        types={media.types}
-                        path={media.path}
+                        {...media}
                         alt={title}
                     />}
 
@@ -148,9 +146,9 @@ export const Warmup = ({id: warmupId, persoId, ...props}) => {
                 if (node.types.includes(cndTypes.QNA)) {
                     return (
                         <Qna
-                        key={node.id}
-                        id={node.id}
-                    />
+                            key={node.id}
+                            id={node.id}
+                        />
                     );
                 }
 

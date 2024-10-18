@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {JahiaCtx} from 'contexts';
-import {CxsCtx} from 'unomi/cxs';
+import {JahiaCtx, CxsCtx} from 'contexts';
 import {GetPersonalizedScoreVariant} from 'webappGraphql';
 import {useLazyQuery} from '@apollo/client';
-import {Typography, makeStyles} from '@material-ui/core';
+import {Typography, makeStyles, CircularProgress} from '@material-ui/core';
 import classnames from 'clsx';
 import {cssSharedClasses, EmbeddedPathInHtmlResolver} from 'components';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import DOMPurify from 'dompurify';
 import {useTranslation} from 'react-i18next';
 

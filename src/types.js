@@ -17,38 +17,38 @@ export const jcrNode = PropTypes.shape({
         displayName: PropTypes.string.isRequired
     })
 });
+export const mediaShape = {
+    id: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    types: PropTypes.arrayOf(PropTypes.string).isRequired
+};
+
+export const media = PropTypes.shape(mediaShape);
+
+export const coreNode = PropTypes.shape({
+    ...mediaShape,
+    type: PropTypes.string.isRequired
+});
 
 export const previewTarget = PropTypes.shape({
     id: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired
 });
 
-export const childNode = PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    types: PropTypes.arrayOf(PropTypes.string).isRequired
-});
-
-export const media = PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    types: PropTypes.arrayOf(PropTypes.string).isRequired,
-    path: PropTypes.string.isRequired
-});
-
-export const quizContent = PropTypes.shape({
+export const content = PropTypes.shape({
     quizKey: PropTypes.string.isRequired,
     title: PropTypes.string,
     subtitle: PropTypes.string,
     description: PropTypes.string,
     duration: PropTypes.string.isRequired,
-    media,
-    childNodes: PropTypes.arrayOf(childNode),
+    media: media,
+    childNodes: PropTypes.arrayOf(coreNode),
     scorePerso: PropTypes.arrayOf(jcrNode),
     mktgForm: PropTypes.string,
     mktoConfig: PropTypes.object
 });
 
-export const quizConfig = PropTypes.shape({
+export const config = PropTypes.shape({
     userTheme: PropTypes.object,
     transitionLabel: PropTypes.string,
     isTransitionEnabled: PropTypes.bool,
@@ -57,11 +57,8 @@ export const quizConfig = PropTypes.shape({
 });
 
 export const quizData = PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    types: PropTypes.arrayOf(PropTypes.string).isRequired,
-    quizContent,
-    quizConfig,
+    core: coreNode,
+    content: content,
+    config: config,
     languageBundle: PropTypes.object
 });

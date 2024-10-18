@@ -9,9 +9,15 @@ const useStyles = makeStyles(theme => ({
     wrapper: {
         zIndex: 5,
         position: 'relative',
+        backgroundColor: 'transparent',
         '.showResult &': {
             backgroundColor: theme.palette.grey['300']
-        }
+        },
+        // Transition: 'background-color 0.1s ease-in-out'
+        transition: theme.transitions.create(['background-color'], {
+            duration: 100, // Theme.transitions.duration.standard, // '10s',//
+            easing: theme.transitions.easing.header
+        })
     },
     header: {
 
@@ -33,37 +39,46 @@ const useStyles = makeStyles(theme => ({
         zIndex: 4,
         listStyle: 'none',
         padding: 0,
-        marginTop: 0,
-        marginBottom: `${theme.spacing(2)}px`,
-        '.showResult &': {
-            marginBottom: 0,
-            [theme.breakpoints.between('xs', 'sm')]: {
-                marginBottom: `${theme.spacing(1)}px`
-            }
-        }
+        margin: 0
+        // '.showResult &': {
+        //     // [theme.breakpoints.between('xs', 'sm')]: {
+        //     //     marginBottom: `${theme.spacing(1)}px`
+        //     // }
+        // }
     },
     headerResult: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: 0,
+        // Height: 0,
+        height: theme.geometry.header.result.height,
         width: '100%',
         maxWidth: '1280px',
         overflow: 'hidden',
-        transition: theme.transitions.create(['height'], {
-            duration: theme.transitions.duration.standard, // '10s',//
+        opacity: 0,
+        visibility: 'hidden',
+        marginBottom: `${theme.spacing(1)}px`,
+        // Transition: theme.transitions.create(['height'], {
+        //     duration: theme.transitions.duration.standard, // '10s',//
+        //     easing: theme.transitions.easing.header
+        // }),
+        // transition: 'opacity 0.1s ease-in-out',
+        transition: theme.transitions.create(['opacity'], {
+            duration: 100, // Theme.transitions.duration.standard, // '10s',//
             easing: theme.transitions.easing.header
         }),
         '.showResult &': {
-            height: theme.geometry.header.result.height, // '45px',//'auto',
-            marginBottom: `${theme.spacing(1)}px`
-
+            // Height: theme.geometry.header.result.height, // '45px',//'auto',
+            // marginBottom: `${theme.spacing(1)}px`
+            opacity: 1,
+            visibility: 'visible'
         }
     },
     headerText: {
         textTransform: 'capitalize',
         fontWeight: theme.typography.fontWeightBold,
         color: theme.palette.grey[700],
+        lineHeight: 1,
         [theme.breakpoints.between('xs', 'sm')]: {
             fontSize: '1.75rem'
         }
@@ -75,7 +90,7 @@ export const Header = props => {
 
     const {isPreview} = React.useContext(JahiaCtx);
     const {state, dispatch} = React.useContext(StoreCtx);
-    const {isTransitionEnabled, transitionTimeout, isBrowsingEnabled, languageBundle} = React.useContext(AppCtx);
+    const {config: {isTransitionEnabled, transitionTimeout, isBrowsingEnabled}, languageBundle} = React.useContext(AppCtx);
 
     const {
         slideSet,
@@ -141,12 +156,11 @@ export const Header = props => {
                 <ol className={classes.headerIndicators}>
                     {slideSet.map(itemId => (
                         <Indicator
-                        key={itemId}
-                        id={itemId}
-                        enabled={isBrowsingEnabled}
-                    />
-                  )
-                )}
+                            key={itemId}
+                            id={itemId}
+                            isClickable={isBrowsingEnabled}
+                        />
+                    ))}
                 </ol>
                 {languageBundle &&
                 <div className={classes.headerResult}>

@@ -1,4 +1,4 @@
-import {getRandomString, getTypes} from 'misc/utils';
+import {getMediaProps, getRandomString} from 'misc/utils';
 
 export const formatQnaJcrProps = qnaJcrProps => {
     const randomSelection = JSON.parse(qnaJcrProps.randomSelection?.value || false);
@@ -24,11 +24,9 @@ export const formatQnaJcrProps = qnaJcrProps => {
         question: qnaJcrProps.question?.value || '',
         help: qnaJcrProps.help?.value || '',
         notUsedForScore: JSON.parse(qnaJcrProps.notUsedForScore?.value || false),
-        media: {
-            id: qnaJcrProps.media?.node?.uuid || null,
-            types: getTypes(qnaJcrProps.media?.node),
-            path: qnaJcrProps.media?.node?.path || null
-        },
+        media: getMediaProps({
+            node: qnaJcrProps.media?.node
+        }),
         jExpField2Map: qnaJcrProps.jExpField2Map?.value || null,
         randomSelection,
         answers,

@@ -37,7 +37,7 @@ export const Percentage = props => {
 
     const sharedClasses = cssSharedClasses(props);
     const {media, title, subtitle, onClick} = props;
-    const {resetBtnIsEnabled, languageBundle} = React.useContext(AppCtx);
+    const {config: {isResetEnabled}, languageBundle} = React.useContext(AppCtx);
 
     const {score} = state;
 
@@ -70,7 +70,7 @@ export const Percentage = props => {
                     <CircularProgressbar value={score} text={`${score}%`}/>
                 </div>
 
-                {resetBtnIsEnabled &&
+                {isResetEnabled &&
                 <Button onClick={onClick}>
                     {languageBundle && languageBundle.btnReset}
                 </Button>}

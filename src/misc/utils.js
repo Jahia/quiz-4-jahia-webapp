@@ -12,6 +12,23 @@ export const getTypes = jcrProps => {
     return [primaryNodeType, ...superTypes, ...mixinTypes];
 };
 
+export const getMediaProps = ({node}) => {
+    return {
+        id: node?.uuid || null,
+        types: getTypes(node),
+        path: node?.path || null
+    };
+};
+
+export const getCoreProps = ({node, path}) => {
+    return {
+        id: node?.uuid || null,
+        type: node?.primaryNodeType?.name,
+        types: getTypes(node),
+        path: node?.path || path || null
+    };
+};
+
 export function getProperties(properties, context) {
     if (!properties) {
         return;

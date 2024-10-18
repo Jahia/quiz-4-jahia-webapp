@@ -34,12 +34,16 @@ const getScore = ({resultSet, quiz, isPreview}) => {
 const init = ({quizData, focusId}) => {
     // Console.log("jContent.transition : ",jContent.transition);
 
-    const quiz = {id: quizData.id, type: quizData.type, ...quizData.quizContent};
+    const quiz = {
+        id: quizData.core.id,
+        type: quizData.core.type,
+        ...quizData.content
+    };
     const {childNodes = [], scorePerso} = quiz;
 
     const scoreId = scorePerso?.uuid || getRandomString(5, '#aA');
 
-    const slideSet = [quizData.id];
+    const slideSet = [quiz.id];
     childNodes.forEach(node => slideSet.push(node.id));
     slideSet.push(scoreId);
 
@@ -132,10 +136,12 @@ const reducer = (state, action) => {
 
         case 'SHOW_SLIDE': {
             const slide = payload.slide;
-            // Console.debug("[STORE] SHOW_SLIDE - slide: ",slide);
+            const showScore = state.slideSet.indexOf(slide) === (state.slideSet.length - 1);
+
             return {
                 ...state,
                 currentSlide: slide,
+                showScore,
                 showNext: showNext({...state, slide})
             };
         }

@@ -10,7 +10,6 @@ import classnames from 'clsx';
 import {formatPersoResultJcrProps} from './PersoResultModel';
 import {Variant} from './Variant';
 import {useTranslation} from 'react-i18next';
-import {quizContent} from 'types';
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -21,14 +20,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const PersonalizedSlide = ({personalizedResultId, onClick, quizContent, ...props}) => {
+export const PersonalizedSlide = ({personalizedResultId, onClick, ...props}) => {
     const {t} = useTranslation();
     const {workspace, locale, previewCm} = React.useContext(JahiaCtx);
 
     const sharedClasses = cssSharedClasses(props);
     const classes = useStyles(props);
 
-    const {resetBtnIsEnabled, languageBundle} = React.useContext(AppCtx);
+    const {config: {isResetEnabled}, content: quizContent, languageBundle} = React.useContext(AppCtx);
 
     const {loading, error, data} = useQuery(GetPersonalizedScoreNode, {
         variables: {
@@ -57,11 +56,10 @@ export const PersonalizedSlide = ({personalizedResultId, onClick, quizContent, .
     return (
         <>
             {media &&
-            <Media id={media.id}
-                   types={media.types}
-                   path={media.path}
+            <Media {...media}
                    alt={title}
             />}
+
             <div className={classnames(
                 sharedClasses.caption,
                 sharedClasses.captionMain
@@ -100,7 +98,7 @@ export const PersonalizedSlide = ({personalizedResultId, onClick, quizContent, .
                         {t('rendering.perso.notRendered')}
                     </Typography>}
 
-                {resetBtnIsEnabled &&
+                {isResetEnabled &&
                 <Button onClick={onClick}>
                     {languageBundle && languageBundle.btnReset}
                 </Button>}
@@ -111,6 +109,5 @@ export const PersonalizedSlide = ({personalizedResultId, onClick, quizContent, .
 
 PersonalizedSlide.propTypes = {
     personalizedResultId: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-    quizContent
+    onClick: PropTypes.func.isRequired
 };

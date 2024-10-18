@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => ({
 
 export const Transition = props => {
     const theme = useTheme();
-    const {transitionLabel} = React.useContext(AppCtx);
+    const {config: {transitionLabel}} = React.useContext(AppCtx);
     const {state: {transitionActive}} = React.useContext(StoreCtx);
 
     const transitionRow = [...Array(theme.transitions.row)];
