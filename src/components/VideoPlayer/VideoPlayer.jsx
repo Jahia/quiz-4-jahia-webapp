@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import {JahiaCtx} from 'contexts';
+import {AppCtx, JahiaCtx} from 'contexts';
 import ReactPlayer from 'react-player';
 import {syncVideoStatus} from 'misc/trackerWem';
 import {makeStyles} from '@material-ui/core/styles';
@@ -11,7 +11,8 @@ const useStyles = makeStyles((/* theme */) => ({
 
 export const VideoPlayer = ({ownerID, videoURL, videoId, ...props}) => {
     const classes = useStyles(props);
-    const {quizId, quizPath, quizType, isPreview} = React.useContext(JahiaCtx);
+    const {isPreview} = React.useContext(JahiaCtx);
+    const {core: {id: quizId, path: quizPath, type: quizType}} = React.useContext(AppCtx);
 
     const player = useRef(null);
 

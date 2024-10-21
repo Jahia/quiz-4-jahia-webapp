@@ -86,9 +86,11 @@ const reducer = (state, action) => {
                 slideSet = [...slideSet, ...slides];
             }
 
+            slideSet = [...new Set(slideSet)];
             return {
                 ...state,
                 slideSet,
+                slideSetInit: [...slideSet],
                 showNext: showNext({slideSet, slide: state.currentSlide})
             };
         }

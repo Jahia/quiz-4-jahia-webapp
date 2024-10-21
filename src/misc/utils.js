@@ -13,6 +13,10 @@ export const getTypes = jcrProps => {
 };
 
 export const getMediaProps = ({node}) => {
+    if (!node) {
+        return null;
+    }
+
     return {
         id: node?.uuid || null,
         types: getTypes(node),

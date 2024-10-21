@@ -73,7 +73,8 @@ const useStyles = makeStyles(theme => ({
     },
     labelGroup: {
         margin: 'unset',
-        marginLeft: '12px'
+        marginLeft: '12px',
+        flexGrow: 1
     }
 }));
 
@@ -92,18 +93,8 @@ export const Answer = props => {
         });
 
     const Icon = isValid ? CheckIcon : ClearIcon;
-    // Const getResultIcon = () =>{
-    //     if(isValid)
-    //         return <CheckIcon />
-    //     return <ClearIcon />
-    // };
 
     const Control = qna.inputType === 'checkbox' ? Checkbox : Radio;
-    // Const getControl = () =>{
-    //     if("checkbox"===qna.inputType)
-    //         return <Checkbox id={answer.id} />
-    //     return <Radio id={answer.id}/>
-    // };
 
     return (
         <div className={classnames(
@@ -116,13 +107,10 @@ export const Answer = props => {
                 (isValid ? 'valid' : '')
             )}
             >
-                {/* {getResultIcon()} */}
                 <Icon/>
             </div>
             <FormControlLabel
                 className={classes.labelGroup}
-                // Value={answer.checked}
-                // control={getControl()}
                 control={<Control id={answer.id}/>}
                 label={answer.label}
                 labelPlacement="end"

@@ -5,12 +5,12 @@ import {Typography} from '@material-ui/core';
 import {useTranslation} from 'react-i18next';
 import {previewTarget, media} from 'types';
 
-export const Preview = ({previewTarget: {id, type}, media, ...props}) => {
+export const Preview = ({previewTarget: {id, type}, media}) => {
     const {t} = useTranslation();
 
     switch (true) {
         case type === cndTypes.QUIZ:
-            return <Quiz id={id} {...props}/>;
+            return <Quiz/>;
         case type === cndTypes.QNA:
             return <Qna id={id}/>;
         case type === cndTypes.WARMUP:
