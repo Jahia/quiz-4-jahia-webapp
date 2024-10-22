@@ -9,7 +9,7 @@ export const JahiaAsset = ({id, types, path, alt, sourceID}) => {
     const {cndTypes, host, workspace} = React.useContext(JahiaCtx);
 
     switch (true) {
-        case Array.isArray(types) && types.length === 0 && path: // Case external video
+        case Array.isArray(types) && types.length === 0 && Boolean(path): // Case external video
             return <Video videoId="external" videoURL={path} ownerID={sourceID}/>;
 
         case types.includes(cndTypes.JNT_FILE) && types.includes(cndTypes.IMAGE):
@@ -28,7 +28,7 @@ export const JahiaAsset = ({id, types, path, alt, sourceID}) => {
 };
 
 JahiaAsset.propTypes = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     types: PropTypes.array.isRequired,
     path: PropTypes.string,
     sourceID: PropTypes.string,

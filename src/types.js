@@ -8,7 +8,7 @@ export const jcrNode = PropTypes.shape({
     name: PropTypes.string.isRequired,
     primaryNodeType: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        supertypes: PropTypes.shape({name: PropTypes.string.isRequired})
+        supertypes: PropTypes.arrayOf(PropTypes.shape({name: PropTypes.string.isRequired}))
     }),
     mixinTypes: PropTypes.arrayOf(PropTypes.shape({name: PropTypes.string.isRequired})),
     site: PropTypes.shape({
@@ -18,7 +18,7 @@ export const jcrNode = PropTypes.shape({
     })
 });
 export const mediaShape = {
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
     path: PropTypes.string.isRequired,
     types: PropTypes.arrayOf(PropTypes.string).isRequired
 };
@@ -43,7 +43,7 @@ export const content = PropTypes.shape({
     duration: PropTypes.string.isRequired,
     media: media,
     childNodes: PropTypes.arrayOf(coreNode),
-    scorePerso: PropTypes.arrayOf(jcrNode),
+    scorePerso: jcrNode,
     mktgForm: PropTypes.string,
     mktoConfig: PropTypes.object
 });

@@ -22,7 +22,6 @@ export const GetQuiz = gql`
                 browsing: property(name:"game4:browsing"){ value }
                 mktgForm: property(name:"game4:marketingFormChoice"){ value }
                 mktoConfig: property(language:$language,name:"game4:mktoConfig"){ value }
-#                personalizedResult: property(name:"game4:personalizedResultContent"){ node: refNode { ...CoreNodeFields } }
                 children(typesFilter:{types:["game4mix:quizChild"]}) { nodes { ...CoreNodeFields } }
                 ...MediaProperty
                 ...QuizStaticLabels

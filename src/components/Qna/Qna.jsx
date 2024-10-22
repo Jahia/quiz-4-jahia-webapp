@@ -103,7 +103,7 @@ export const Qna = ({id: qnaId, persoId, ...props}) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
 
-    const {workspace, locale, isPreview} = React.useContext(JahiaCtx);
+    const {workspace, locale, isPreview, previewCm} = React.useContext(JahiaCtx);
     const {config: {isTransitionEnabled, transitionTimeout}, languageBundle} = React.useContext(AppCtx);
     const {state, dispatch} = React.useContext(StoreCtx);
 
@@ -261,7 +261,7 @@ export const Qna = ({id: qnaId, persoId, ...props}) => {
                     {getAnswers()}
                 </FormGroup>
 
-                <Button disabled={!qna.enableSubmit}
+                <Button disabled={!qna.enableSubmit || previewCm}
                         onClick={handleSubmit}
                 >
                     {languageBundle && languageBundle.btnSubmit}

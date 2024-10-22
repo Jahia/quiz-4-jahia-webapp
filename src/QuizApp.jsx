@@ -123,23 +123,23 @@ const render = async (target, context) => {
                         previewCm,
                         previewTarget,
                         isPreview
-                    }}
+                        }}
                     >
                         <Store quizData={quizData} focusId={focusId}>
                             <ApolloProvider client={client}>
                                 <div style={{overflow: 'hidden'}}>
                                     <CxsCtxProvider>
                                         <AppCtxProvider value={{
-                                            ...appContext,
-                                            core: quizData.core,
-                                            content: quizData.content,
-                                            config: {
-                                                ...quizData.config,
-                                                transitionTimeout: 1000,
-                                                isBrowsingEnabled: (quizData.config.isBrowsingEnabled && !isEdit && !previewCm)
-                                            },
-                                            languageBundle: quizData.languageBundle
-                                        }}
+                    ...appContext,
+                    core: quizData.core,
+                    content: quizData.content,
+                    config: {
+                        ...quizData.config,
+                        transitionTimeout: 1000,
+                        isBrowsingEnabled: (quizData.config.isBrowsingEnabled && !isEdit && !previewCm)
+                    },
+                    languageBundle: quizData.languageBundle
+                }}
                                         >
                                             <App/>
                                         </AppCtxProvider>

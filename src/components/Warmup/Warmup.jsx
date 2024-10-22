@@ -23,7 +23,7 @@ export const Warmup = ({id: warmupId, persoId, ...props}) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
 
-    const {workspace, locale, cndTypes} = React.useContext(JahiaCtx);
+    const {workspace, locale, cndTypes, previewCm} = React.useContext(JahiaCtx);
     const {config: {isTransitionEnabled, transitionTimeout}, languageBundle} = React.useContext(AppCtx);
     const {state, dispatch} = React.useContext(StoreCtx);
 
@@ -137,7 +137,7 @@ export const Warmup = ({id: warmupId, persoId, ...props}) => {
                         </div>}
                     </div>
 
-                    <Button onClick={handleCLick}>
+                    <Button disabled={previewCm} onClick={handleCLick}>
                         {languageBundle && languageBundle.btnQuestion}
                     </Button>
                 </div>
