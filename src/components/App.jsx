@@ -1,11 +1,12 @@
 import React from 'react';
-import {JahiaCtx, StoreCtx, AppCtx} from '../contexts';
+import {JahiaCtx, StoreCtx, AppCtx, CxsCtx} from '../contexts';
 import {Grid, Typography, makeStyles, ThemeProvider} from '@material-ui/core';
 import {Quiz, Warmup, Transition, Score, Header, Qna, ContentPerso, Preview, theme} from 'components';
 import classnames from 'clsx';
 
 import 'react-circular-progressbar/dist/styles.css';
 import {useTranslation} from 'react-i18next';
+import {getUserContext} from '../data/userJexpContext';
 
 const useStyles = makeStyles(() => ({
     main: {
@@ -25,16 +26,24 @@ const useStyles = makeStyles(() => ({
 export const App = props => {
     const {t} = useTranslation();
     const classes = useStyles(props);
+    const cxs = React.useContext(CxsCtx);
     const {cndTypes, previewTarget} = React.useContext(JahiaCtx);
-    const {content: quizContent, config: quizConfig} = React.useContext(AppCtx);
+    const {content: {media, childNodes, quizKey}, config: {userTheme, isResetEnabled}} = React.useContext(AppCtx);
+    const userPropScoreName = `quiz-score-${quizKey}`;
 
-    const {state} = React.useContext(StoreCtx);
+    const {state, dispatch} = React.useContext(StoreCtx);
     const {
         currentSlide,
         showResult,
         showScore,
         persoWasDone
     } = state;
+
+    React.useEffect(() => {
+        if (!isResetEnabled && cxs) {
+            getUserContext({cxs, userPropScoreName, isResetEnabled, dispatch});
+        }
+    }, [cxs, userPropScoreName, isResetEnabled, dispatch]);
 
     const displayScore = () => {
         if (showScore) {
@@ -48,14 +57,14 @@ export const App = props => {
                 <ContentPerso
                     key={persoId}
                     id={persoId}
-                    media={quizContent.media}
+                    media={media}
                 />
             );
         }
     };
 
     return (
-        <ThemeProvider theme={theme(quizConfig?.userTheme)}>
+        <ThemeProvider theme={theme(userTheme)}>
             <Grid container spacing={3}>
                 <Grid item
                       xs
@@ -69,13 +78,13 @@ export const App = props => {
                 )}
                     >
                         <Transition/>
-                        {Boolean(previewTarget) && <Preview {...{previewTarget, media: quizContent.media}}/>}
+                        {Boolean(previewTarget) && <Preview {...{previewTarget, media: media}}/>}
 
                         {!previewTarget &&
                         <>
                             <Quiz/>
 
-                            {quizContent.childNodes.map(node => {
+                            {childNodes.map(node => {
                                 if (node.types.includes(cndTypes.QNA)) {
                                     return (
                                         <Qna

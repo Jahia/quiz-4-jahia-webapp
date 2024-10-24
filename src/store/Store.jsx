@@ -74,6 +74,17 @@ const reducer = (state, action) => {
     const {payload} = action;
 
     switch (action.case) {
+        case 'USER_DATA_SCORE_READY': {
+            const {userScore, isResetEnabled} = payload;
+            const isUserCanDoTheQuiz = isResetEnabled || (typeof userScore === 'undefined');
+
+            return {
+                ...state,
+                showScore: !isUserCanDoTheQuiz,
+                currentSlide: isUserCanDoTheQuiz ? state.currentSlide : state.slideSet.at(-1)
+            };
+        }
+
         case 'ADD_SLIDES': {
             const slides = payload.slides;
             const parentSlide = payload.parentSlide;
