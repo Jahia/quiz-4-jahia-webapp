@@ -28,8 +28,8 @@ export const getUserContext = ({cxs: {sessionId}, userPropScoreName, isResetEnab
         dispatch({
             case: 'USER_DATA_SCORE_READY',
             payload: {
-                userScore: data.profileProperties[userPropScoreName],
-                isResetEnabled
+                isResetEnabled,
+                userScore: data.profileProperties[userPropScoreName]
             }
         });
         // SetUserData(response.data);
