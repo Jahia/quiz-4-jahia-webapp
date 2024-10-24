@@ -80,6 +80,7 @@ const reducer = (state, action) => {
 
             return {
                 ...state,
+                score: userScore ? userScore : state.score,
                 showScore: !isUserCanDoTheQuiz,
                 currentSlide: isUserCanDoTheQuiz ? state.currentSlide : state.slideSet.at(-1)
             };
