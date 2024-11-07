@@ -24,7 +24,7 @@ const getScore = ({resultSet, quiz, isPreview}) => {
                 quiz,
                 score
             }),
-            500
+            1000
         );
     }
 

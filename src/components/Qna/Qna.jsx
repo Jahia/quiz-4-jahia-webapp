@@ -166,23 +166,10 @@ export const Qna = ({id: qnaId, persoId, ...props}) => {
             // Note case multiple is manage by comma separated case
             const values =
                 qna.answers
-                    .filter(answer => answer.checked)
-                    .reduce(
-                        (item, answer, index) => {
-                            if (answer.cdpValue && answer.cdpValue.length > 0) {
-                                if (index === 0) {
-                                    item = answer.cdpValue;
-                                } else {
-                                    item = `${item}, ${answer.cdpValue}`;
-                                }
-                            }
+                    .filter(({checked, cdpValue}) => checked && cdpValue && cdpValue.length > 0)
+                    .map(({cdpValue}) => cdpValue);
 
-                            return item;
-                        }, null
-                    );
-            // Console.debug("[handleSubmit] update : ",qna.jExpField2Map," with values : ",values);
-
-            // if tracker is not initialized the track event is not send
+            // If tracker is not initialized the track event is not send
             if (!isPreview) {
                 syncVisitorData({
                     qna: {
@@ -191,7 +178,7 @@ export const Qna = ({id: qnaId, persoId, ...props}) => {
                         title: qna.title
                     },
                     propertyName: qna.jExpField2Map,
-                    propertyValue: values
+                    propertyValues: values
                 });
             }
         }

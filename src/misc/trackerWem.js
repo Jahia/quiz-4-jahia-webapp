@@ -61,7 +61,7 @@ export const syncVideoStatus = ({quiz, parentId, status, player, video}) => {
     window.wem.collectEvent(event);
 };
 
-export const syncVisitorData = ({qna, propertyName, propertyValue}) => {
+export const syncVisitorData = ({qna, propertyName, propertyValues}) => {
     // Const flattenedPropertyName = `flattenedProperties.${propertyName}`;
     const eventPropertyName = `properties.${propertyName}`;
 
@@ -71,9 +71,12 @@ export const syncVisitorData = ({qna, propertyName, propertyValue}) => {
             qna
         }));
 
+    const values = propertyValues.length > 1 ? propertyValues : propertyValues[0];
+    // Const ops = Array.isArray(values) ? 'add' : 'update';
+
     event.properties = {
         update: {
-            [eventPropertyName]: propertyValue
+            [eventPropertyName]: values
         }
     };
     window.wem.collectEvent(event);
