@@ -158,8 +158,7 @@ const render = async (target, context) => {
             <ErrorHandler
                 item={e.message}
                 errors={e.errors}
-            />,
-            document.getElementById(target)
+            />
         );
     }
 };
